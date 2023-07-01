@@ -19,6 +19,15 @@ class UserEntity {
 
   @Column({ name: 'password', nullable: false })
   password: string;
+
+  @Column({ name: 'type_user', nullable: false })
+  typeUser: number;
+
+  @Column({ name: 'created_at', nullable: false })
+  createdAt: Date;
+
+  @Column({ name: 'updated_at', nullable: false })
+  updateAt: Date;
 }
 
 export { UserEntity };
