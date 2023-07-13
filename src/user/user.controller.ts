@@ -21,7 +21,8 @@ export class UserController {
     const addressesUser = await this.userService.getUserByIdUsingRelations(
       userId,
     );
-    return await new ReturnUserDto(addressesUser);
+
+    return new ReturnUserDto(addressesUser);
   }
 
   @Get()
