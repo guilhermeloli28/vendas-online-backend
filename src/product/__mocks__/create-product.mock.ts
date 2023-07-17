@@ -1,4 +1,4 @@
-import { categoryMock } from 'src/category/__mocks__/category.mock';
+import { categoryMock } from '../../category/__mocks__/category.mock';
 import { CreateProductDto } from '../dtos/create-product.dto';
 
 export const createProductMock: CreateProductDto = {
