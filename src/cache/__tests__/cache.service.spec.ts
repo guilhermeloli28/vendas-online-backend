@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CacheService } from '../cache.service';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { userEntityMock } from '../../user/__mocks__/user.mock';
 import { Cache } from 'cache-manager';
+import { userEntityMock } from '../../user/__mocks__/user.mock';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
-describe('Cache Service', () => {
+describe('CacheService', () => {
   let service: CacheService;
-  let cache: Cache;
+  let cacheManager: Cache;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,7 +23,7 @@ describe('Cache Service', () => {
     }).compile();
 
     service = module.get<CacheService>(CacheService);
-    cache = module.get(CACHE_MANAGER);
+    cacheManager = module.get(CACHE_MANAGER);
   });
 
   it('should be defined', () => {
@@ -37,8 +37,8 @@ describe('Cache Service', () => {
   });
 
   it('should return data in function', async () => {
-    const result = { test: 'test' };
-    jest.spyOn(cache, 'get').mockResolvedValue(undefined);
+    const result = { test: 'tes' };
+    jest.spyOn(cacheManager, 'get').mockResolvedValue(undefined);
 
     const user = await service.getCache('key', () => Promise.resolve(result));
 
