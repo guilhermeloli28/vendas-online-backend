@@ -85,4 +85,16 @@ describe('City Service', () => {
       service.findCategoryByName(categoryMock.name),
     ).rejects.toThrowError();
   });
+
+  it('should return category in find by id', async () => {
+    const category = await service.findCategoryById(categoryMock.id);
+
+    expect(category).toEqual(categoryMock);
+  });
+
+  it('should return error if category find by id not exists', async () => {
+    jest.spyOn(categoryRepository, 'findOne').mockRejectedValue(new Error());
+
+    expect(service.findCategoryById(categoryMock.id)).rejects.toThrowError();
+  });
 });

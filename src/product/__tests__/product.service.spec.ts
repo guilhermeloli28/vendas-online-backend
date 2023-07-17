@@ -4,10 +4,14 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ProductService } from '../product.service';
 import { ProductEntity } from '../entities/product.entity';
 import { productMock } from '../__mocks__/product.mock';
+import { createProductMock } from '../__mocks__/create-product.mock';
+import { CategoryService } from 'src/category/category.service';
+import { categoryMock } from 'src/category/__mocks__/category.mock';
 
 describe('ProductService', () => {
   let service: ProductService;
   let productRepository: Repository<ProductEntity>;
+  let categoryService: CategoryService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -16,8 +20,14 @@ describe('ProductService', () => {
         {
           provide: getRepositoryToken(ProductEntity),
           useValue: {
-            save: jest.fn().mockResolvedValue(productMock),
+            save: jest.fn().mockResolvedValue(createProductMock),
             find: jest.fn().mockResolvedValue([productMock]),
+          },
+        },
+        {
+          provide: CategoryService,
+          useValue: {
+            findCategoryById: jest.fn().mockResolvedValue(categoryMock),
           },
         },
       ],
@@ -27,6 +37,7 @@ describe('ProductService', () => {
     productRepository = module.get<Repository<ProductEntity>>(
       getRepositoryToken(ProductEntity),
     );
+    categoryService = module.get<CategoryService>(CategoryService);
   });
 
   it('should be defined', () => {
@@ -50,5 +61,19 @@ describe('ProductService', () => {
     jest.spyOn(productRepository, 'find').mockRejectedValue(new Error());
 
     expect(service.findAllProducts()).rejects.toThrowError();
+  });
+
+  it('should return product after save', async () => {
+    const products = await service.createProduct(createProductMock);
+
+    expect(products).toEqual(createProductMock);
+  });
+
+  it('should return product after save', async () => {
+    jest
+      .spyOn(categoryService, 'findCategoryById')
+      .mockRejectedValue(new Error());
+
+    expect(service.createProduct(createProductMock)).rejects.toThrowError();
   });
 });
