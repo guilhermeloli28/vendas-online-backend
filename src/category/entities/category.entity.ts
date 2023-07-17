@@ -1,4 +1,4 @@
-import { ProductEntity } from 'src/product/entities/product.entity';
+import { ProductEntity } from '../../product/entities/product.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'category' })
@@ -16,5 +16,5 @@ export class CategoryEntity {
   updateAt: Date;
 
   @OneToMany(() => ProductEntity, (product: ProductEntity) => product.category)
-  products: ProductEntity;
+  products?: ProductEntity;
 }
