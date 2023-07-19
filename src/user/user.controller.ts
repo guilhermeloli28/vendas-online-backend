@@ -14,11 +14,14 @@ import { UserEntity } from './entities/user.entity';
 import { ReturnUserDto } from './dtos/returnUser.dto';
 import { UpdatePasswordDTO } from './dtos/update-password.dto';
 import { UserId } from 'src/decorators/user-id.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
+import { UserType } from './enum/user-type.enum';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Roles(UserType.Admin)
   @Get('/:userId')
   async getUserById(@Param('userId') userId: number): Promise<ReturnUserDto> {
     const addressesUser = await this.userService.getUserByIdUsingRelations(
@@ -28,6 +31,7 @@ export class UserController {
     return new ReturnUserDto(addressesUser);
   }
 
+  @Roles(UserType.Admin)
   @Get()
   async getAllUser(): Promise<ReturnUserDto[]> {
     return (await this.userService.getAllUser()).map(
@@ -41,6 +45,7 @@ export class UserController {
     return this.userService.createUser(createUser);
   }
 
+  @Roles(UserType.Admin, UserType.User)
   @UsePipes(ValidationPipe)
   @Patch()
   async updatePasswordUser(
