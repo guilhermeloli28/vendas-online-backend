@@ -5,12 +5,11 @@ import {
   UsePipes,
   ValidationPipe,
   Body,
-  BadRequestException,
 } from '@nestjs/common';
 import { ReturnCategory } from './dtos/return-category.dto';
 import { CategoryService } from './category.service';
-import { Roles } from 'src/decorators/roles.decorator';
-import { UserType } from 'src/user/enum/user-type.enum';
+import { Roles } from '../decorators/roles.decorator';
+import { UserType } from '../user/enum/user-type.enum';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { CategoryEntity } from './entities/category.entity';
 
