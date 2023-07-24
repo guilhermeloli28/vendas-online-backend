@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from './entities/category.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateCategoryDto } from './dtos/create-category.dto';
+import { UpdateCategory } from './dtos/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -39,9 +40,21 @@ export class CategoryService {
     return await this.categoryRepository.save(createCategory);
   }
 
-  async findCategoryById(categoryId: number): Promise<CategoryEntity> {
+  async findCategoryById(
+    categoryId: number,
+    isRelations?: boolean,
+  ): Promise<CategoryEntity> {
+    const relations = isRelations
+      ? {
+          products: true,
+        }
+      : undefined;
+
     const category = await this.categoryRepository.findOne({
-      where: { id: categoryId },
+      where: {
+        id: categoryId,
+      },
+      relations,
     });
 
     if (!category) {
@@ -61,5 +74,27 @@ export class CategoryService {
     }
 
     return category;
+  }
+
+  async deleteCategory(categoryId: number): Promise<DeleteResult> {
+    const category = await this.findCategoryById(categoryId, true);
+
+    if (category.products?.length > 0) {
+      throw new BadRequestException('Category with relations.');
+    }
+
+    return this.categoryRepository.delete({ id: categoryId });
+  }
+
+  async editCategory(
+    categoryId: number,
+    updateCategory: UpdateCategory,
+  ): Promise<CategoryEntity> {
+    const category = await this.findCategoryById(categoryId);
+
+    return this.categoryRepository.save({
+      ...category,
+      ...updateCategory,
+    });
   }
 }
