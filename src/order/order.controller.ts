@@ -14,6 +14,7 @@ import { CreateOrderDTO } from './dtos/create-order.dto';
 import { OrderEntity } from './entities/order.entity';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { Response } from 'express';
+import { ReturnOrderDTO } from './dtos/return-order.dto';
 
 @Roles(UserType.Admin, UserType.Root, UserType.User)
 @Controller('order')
@@ -29,6 +30,7 @@ export class OrderController {
     return this.orderService.createOrder(createOrderDTO, userId);
   }
 
+  @Roles(UserType.Admin, UserType.Root)
   @Get()
   async findOrdersByUserId(
     @UserId() userId: number,
@@ -44,5 +46,13 @@ export class OrderController {
 
     res.status(204).send();
     return;
+  }
+
+  @Roles(UserType.Admin, UserType.Root)
+  @Get('/all')
+  async findAllOrders(): Promise<ReturnOrderDTO[]> {
+    return (await this.orderService.findAllOrders()).map(
+      (order) => new ReturnOrderDTO(order),
+    );
   }
 }
