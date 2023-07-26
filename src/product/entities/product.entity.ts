@@ -21,7 +21,7 @@ export class ProductEntity {
   @Column({ name: 'category_id', nullable: false })
   categoryId: number;
 
-  @Column({ name: 'price', nullable: false })
+  @Column({ name: 'price', nullable: false, type: 'decimal' })
   price: number;
 
   @Column({ name: 'image', nullable: false })
