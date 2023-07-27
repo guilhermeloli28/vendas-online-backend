@@ -6,6 +6,7 @@ import {
   Body,
   Get,
   Res,
+  Param,
 } from '@nestjs/common';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserType } from 'src/user/enum/user-type.enum';
@@ -53,6 +54,16 @@ export class OrderController {
   async findAllOrders(): Promise<ReturnOrderDTO[]> {
     return (await this.orderService.findAllOrders()).map(
       (order) => new ReturnOrderDTO(order),
+    );
+  }
+
+  @Roles(UserType.Admin, UserType.Root)
+  @Get('/:orderId')
+  async findOrderById(
+    @Param('orderId') orderId: number,
+  ): Promise<ReturnOrderDTO> {
+    return new ReturnOrderDTO(
+      (await this.orderService.findOrdersByUserId(undefined, orderId))[0],
     );
   }
 }
